@@ -1,4 +1,4 @@
-setwd('~/Google drive (jlewnard@berkeley.edu)/covid/india/update data')
+setwd('~/Google drive (jlewnard@berkeley.edu)/covid/india/update data/figure code/for github')
 
 ##############################
 #### from here fast ##########
@@ -47,37 +47,21 @@ popUs = c(popUs[1], ## 0-4
           sum(popUs[16:17]), ## 75-79, 80-84
           popUs[18])*1e3
 
-sex = c(apcasedat$sex,tncasedat$sex)
-age = c(apcasedat$age,tncasedat$age)
-#daymed = c(apcasedat$testdate,daymed)
 
-agegrp = rep(NA,length(age))
-agelb = c(0,5,18,30,40,50,65,75,85)
-ageub = c(agelb[2:length(agelb)],200)
-for (i in 1:length(agelb)){
-  agegrp[which(age>=agelb[i]&age<ageub[i])] = i
+load('casedat.Rdata')
+for (i in 1:dim(casedat)[2]){
+  assign(names(casedat)[i],casedat[,i])
 }
 
 ########################################################
 #### load in deaths not linked to cases already seen ###
 ########################################################
-setwd('~/Google drive (jlewnard@berkeley.edu)/covid/india/update data')
-load(file='apDeaths.Rdata')
-load(file='tnDeaths.Rdata')
 
-load('analysisDat.Rdata')
-daymed = analysisDat$daymed
-#analysisDat$daymed = daymed
-#save(analysisDat,file='analysisDat.Rdata')
-
-apDeaths$deathDate = as.numeric(apDeaths$deathDate)
-
-deathDate = c(apDeaths$deathDate,tnDeaths$deathDate)
-deathAge = c(apDeaths$age,tnDeaths$age)
-deathAgeGrp = rep(NA,length(deathAge))
-for (i in 1:length(agelb)){
-  deathAgeGrp[which(deathAge>=agelb[i]&deathAge<ageub[i])] = i
+load('deathsDat.Rdata')
+for (i in 1:dim(deathsDat)[2]){
+  assign(names(deathsDat)[i],deathsDat[,i])
 }
+
 
 propCaseReg = propDeathReg = c()
 for (i in 1:length(agelb)){
@@ -185,91 +169,5 @@ mtext(side=3,'E) Mortality trend by age',adj=0,at=-2.1,font=2,line=0.25,cex=0.5)
 text(x=1:9,y=-7.5,xpd=T,srt=45,adj=1,agelabs,cex=0.65)
 mtext(side=1,'Age group, y',cex=0.5,line=1.5)
 
-
-#labs = c('F) All cases (30d follow-up cohort)',
-#         'G) Male cases (30d follow-up cohort)',
-#         'H) Female cases (30d follow-up cohort)'); 
-#par(mar=c(2.25,2.5,1,0.5)); par(tck=-0.02)
-#
-#for (j in 1:3){
-#  plot(1,type='n',ylim=c(0.88,1),xlim=c(0,30),axes=F,ann=F)
-#  for (i in 1:length(agelb)){
-#    x = c(0,0,rep(1:29,each=2),30)
-#    y = c(0,rep(1-surv[j,i,],each=2))
-#    lines(1-y[1:60]~x[1:60],
-#          col=rgb((i-1)/(length(agelb)-1),0,1-(i-1)/(length(agelb)-1),1),lwd=0.75)
-#  }
-#  # box(bty='l',lwd=0.5)
-#  axis(side=1,at=c(-100,seq(0,30,5)),cex.axis=0.65,lwd=0.5,lwd.ticks=0.5)
-#  axis(side=2,at=c(-100,0.88,0.885),labels=c(NA,0,NA),cex.axis=0.65,las=1,lwd=0.5,lwd.ticks=0.5)
-#  axis(side=2,at=c(0.8875,seq(0.9,1,0.02)),labels=c(NA,seq(90,100,2)),cex.axis=0.65,las=1,lwd=0.5,lwd.ticks=0.5)
-#  mtext(side=3,adj=0,labs[j],font=2,cex=0.5,at=-8)
-#  mtext(side=2,'Proportion surviving, %',cex=0.5,line=1.5)
-#  mtext(side=1,'Days from testing',cex=0.5,line=1.25)
-#}
-#
-#agelabs = c('Ages 0-4 years','Ages 5-17 years','Ages 18-29 years','Ages 30-39 years',
-#            'Ages 40-49 years','Ages 50-64 years','Ages 65-74 years','Ages 75-84 years','Ages 85+ years')
-#par(mar=c(0,0,0,0))
-#plot(ylim=c(0,100),xlim=c(0,100),1,type='n',axes=F,ann=F)
-#for (i in 1:length(agelabs)){
-#  lines(x=c(0,25),y=rep(90-i*8,2),col=rgb((i-1)/(length(agelabs)-1),0,1-(i-1)/(length(agelabs)-1),1),lwd=0.75)
-#  text(x=30,y=90-i*8,agelabs[i],adj=0,cex=0.65,font=3)
-#}
-#
-#round0 = function(x,n){
-#  out = round(x,n)
-#  for (i in 1:length(out)){
-#    if (out[i]==round(x[i],n-1)){
-#      out[i] = paste(out[i],'0',sep='')
-#    }
-#    if (out[i]==round(x[i],n-2)){
-#      out[i] = paste(out[i],'00',sep='')
-#    }
-#  }
-#  return(out)
-#}
-#
-#
-#mat = array(NA,dim=c(12,3))
-#for (i in 1:12){
-#  mat[i,] = exp(c(mean(coxPars[,i],na.rm=T),quantile(coxPars[,i],c(0.025,0.975),na.rm=T)))
-#}
-#
-#matText = round0(mat,2)
-#matText[2,] = c('0.044','0.016','0.094')
-#matText[3,] = c('0.021','0.010','0.034')
-#matText[4,] = c('0.041','0.033','0.051')
-#
-#matText = matText[c(2:9,1,11:12,10),]
-#
-#par(mar=c(0.5,3,1,0))
-#plot(1,xlim=c(0,80),ylim=c(24,0),axes=F,ann=F,type='n')
-#mtext(side=3,adj=0,line=0.25,'I) Predictors of time to death',cex=0.5,font=2,at=-5)
-#text(x=c(1,32.5),y=0,c('Exposure','Adjusted hazard ratio'),
-#     adj=0,cex=0.7,font=2)
-#text(x=31,y=1,'(95% Confidence interval)',cex=0.7,font=1,adj=0)
-#text(x=1,y=c(2,13,17,22),adj=0,c('Age group',
-#                                 'Sex','Date of testing','State'),cex=0.7)
-#ys = c(3:11,14:15,18:20,23:24)
-#text(x=5,y=ys,c('0-4 years','5-17 years','18-29 years',
-#                '30-39 years',
-#                '40-49 years',
-#                '50-64 years',
-#                '65-74 years',
-#                '75-84 years',
-#                '85+ years',
-#                'Female','Male',
-#                'March 1 to April 30','May 1 to June 30','July 1 to August 1',
-#                'Andhra Pradesh','Tamil Nadu'),cex=0.7,adj=0)
-#
-#text(x=45,y=c(8,14,18,23),adj=0.5,'Ref.',cex=0.7)
-#ys = c(3:7,9:11,15,19:20,24)
-#for (i in 1:length(ys)){
-#  text(y=ys[i],x=45,adj=0.5,paste(matText[i,1],' (',matText[i,2],' to ',matText[i,3],')',sep=''),cex=0.7)
-#}
-#lines(x=c(-1,64),y=rep(-0.5,2),lwd=1)
-#lines(x=c(-1,64),y=rep(1.5,2),lwd=1)
-#lines(x=c(-1,64),y=rep(24.5,2),lwd=1)
 
 dev.off()
