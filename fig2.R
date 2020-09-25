@@ -1,6 +1,3 @@
-######### run file "contact tracing analysis.R" before running this file to get objects needed for plotting
-
-
 my.filled.contour = function (x = seq(0, 1, length.out = nrow(z)), y = seq(0, 1, 
                                                                            length.out = ncol(z)), z, xlim = range(x, finite = TRUE), 
                               ylim = range(y, finite = TRUE), zlim = range(z, finite = TRUE), 
@@ -141,7 +138,7 @@ library('RColorBrewer')
 agelb = c(seq(0,80,5))#,seq(30,80,10))
 ageub = c(seq(5,80,5),200)#seq(30,80,10),200)#,seq(40,80,10),200)
 
-
+setwd('~/Dropbox/covid india/revision/figures')
 
 pdf(file='fig2.pdf',height=5,width=6)
 
@@ -199,14 +196,14 @@ mtext(side=1,'Number of contacts',cex=0.5,line=1)
 
 par(mar=c(2.5,2,1,0.5))
 par(tck=-0.05)
-plot(1,xlim=c(0.61,1),ylim=c(0,1),type='n',axes=F,ann=F,lwd=0.75)
+plot(1,xlim=c(0.79,1),ylim=c(0,1),type='n',axes=F,ann=F,lwd=0.75)
 polygon(x=c(-100,100,100,-100),y=c(-100,-100,100,100),col=rgb(1,0,0,0.125),lty=0)
 lines(ys~xs,col='blue')
-axis(side=1,at=c(-100,0.61,0.64),lwd=0.5,lwd.ticks=0.5,labels=NA)
-axis(side=1,at=c(0.65,seq(0.68,1,0.04)),lwd=0.5,lwd.ticks=0.5,labels=NA)
+axis(side=1,at=c(-100,0.79,0.83),lwd=0.5,lwd.ticks=0.5,labels=NA)
+axis(side=1,at=c(0.84,seq(0.85,1,0.01)),lwd=0.5,lwd.ticks=0.5,labels=NA)
 axis(side=2,at=c(-100,seq(0,1,0.2)),cex.axis=0.6,lwd=0.5,lwd.ticks=0.5,las=1,
      labels=c(NA,seq(0,100,20)))
-text(y=-0.12,x=c(0.62,seq(0.68,1,0.08)),c(0,seq(68,100,8)),srt=45,adj=1,xpd=T,cex=0.6)
+text(y=-0.12,x=c(0.79,seq(0.85,1,0.05)),c(0,seq(85,100,5)),srt=45,adj=1,xpd=T,cex=0.6)
 mtext(side=2,'Prop. (%)',line=1.3,cex=0.5)
 #mtext(side=3,'A3. Superspreading',font=3,adj=0,cex=0.5,at=0.42)
 mtext(side=1,'Index case percentile',cex=0.5,line=0.75)
@@ -237,7 +234,7 @@ axis(side=2,at=10:7,lwd=0.5,lwd.ticks=0.5,labels=c('M to M','M to F','F to M','F
 axis(side=2,at=5:2,lwd=0.5,lwd.ticks=0.5,labels=c('M to M','M to F','F to M','F to F'),cex.axis=0.675,las=1)
 
 mtext(side=2,'Direction of transmission',cex=0.5,line=2.25)
-mtext(side=1,'Probability of positive contact (%)',cex=0.5,line=1)
+mtext(side=1,'Proportion positive (%)',cex=0.5,line=1)
 
 axis(side=1,at=log(seq(0.04,0.12,0.01)),labels=NA,lwd=0.5,lwd.ticks=0.5)
 text(x=log(c(0.04,0.05,0.06,0.07,0.08,0.1,0.12)),y=0.3,adj=1,cex=0.675,srt=45,xpd=T,
@@ -299,7 +296,7 @@ axis(side=2,at=seq(0.5/17,1,1/17),
               '60-64',NA,'70-74',NA,'80+'),
      cex.axis=0.675,lwd=0,lwd.ticks=0,las=1)
 mtext(side=2,'Index case age (y)',cex=0.5,line=2.5)
-mtext(side=3,'C9. Transmission probability by age,\n       given exposure (all contacts)',cex=0.5,font=3,adj=0,at=-0.13,line=0.25)
+mtext(side=3,'C9. Proportion positive by age,\n       given exposure (all contacts)',cex=0.5,font=3,adj=0,at=-0.13,line=0)
 
 par(mar=c(2.5,5,2,1))
 filled.contour3(log(prob1),axes=F,ann=F,levels=seq(-4,-0.7,0.1),color.palette=yb)
@@ -318,7 +315,7 @@ text(x=seq(0.5/17,1,1/17),c('0-4',NA,'10-14',NA,
                             '60-64',NA,'70-74',NA,'80+'),y=-0.04,cex=0.675,srt=45,xpd=T,adj=1)
 mtext(side=1,'Contact age (y)',cex=0.5,line=1.5)
 mtext(side=2,'Index case age (y)',cex=0.5,line=2.5)
-mtext(side=3,'C10. Transmission probability by age,\n        given exposure (high-risk contacts)',cex=0.5,font=3,adj=0,at=-0.15,line=0)
+mtext(side=3,'C10. Proportion positive by age,\n        given exposure (high-risk contacts)',cex=0.5,font=3,adj=0,at=-0.15,line=0)
 
 
 
@@ -352,12 +349,8 @@ text(x=seq(0.5/17,1,1/17),c('0-4',NA,'10-14',NA,
                             '60-64',NA,'70-74',NA,'80+'),y=-0.04,cex=0.675,srt=45,xpd=T,adj=1)
 mtext(side=1,'Infected contact age (y)',cex=0.5,line=1.5)
 
-table(analysisDat$daymed[which(analysisDat$dist%in%c('tiruppur'))])
-#### 18380 to 18397
-days[which(daysnums%in%18341:18368)]
-sum(analysisDat$daymed[which(analysisDat$dist%in%c('ariyalur','perambalur','cuddalore','villupuram'))]%in%c(18380:18399))
 
-length(unique(traceDat$id))
+
 par(tck=-0.3)
 par(mar=c(0.25,6,1,3))
 mat = matrix(rep(seq(-4,-0.7,0.01),2),byrow=F,ncol=2)
